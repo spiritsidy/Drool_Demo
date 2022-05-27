@@ -1,0 +1,38 @@
+import com.ppbl.Drool_demo.Entity.OrderRequest;
+import com.ppbl.Drool_demo.Entity.CustomerType;
+global com.ppbl.Drool_demo.Entity.OrderDiscount orderDiscount;
+
+dialect "mvel"
+
+rule "Discount based on Age"
+when
+OrderRequest(age<20 || age>60)
+then
+System.out.println("offer2-Adding 15% discount for Kids/ senior customer");
+        orderDiscount.setDiscount(orderDiscount.getDiscount() + 15);
+end
+
+
+rule "Customer type based discount - Loyal customer"
+    when
+        OrderRequest(customerType.getValue == "LOYAL")
+    then
+        System.out.println("offer2-Adding 2% discount for Loyal customer");
+        orderDiscount.setDiscount(orderDiscount.getDiscount() + 2);
+end
+
+rule "Customer type based discount - other customer"
+    when
+        OrderRequest(customerType.getValue != "LOYAL")
+    then
+        System.out.println("offer2- 10% discount for other customer");
+        orderDiscount.setDiscount(orderDiscount.getDiscount() + 10);
+end
+
+rule "Amount based discount"
+    when
+        OrderRequest(amount > 1000L)
+    then
+        System.out.println("offer2- 9% discount for amount more than Rupees 1000");
+        orderDiscount.setDiscount(orderDiscount.getDiscount() + 9);
+end
